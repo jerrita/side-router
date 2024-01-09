@@ -14,5 +14,6 @@ services:
     network_mode: host
     restart: unless-stopped
     volumes:
-      - ./dnsmasq:/etc/dnsmasq.d
+      - ./dnsmasq.conf:/etc/dnsmasq.conf
+      - ./dnsmasq.d:/etc/dnsmasq.d
       - ./hosts:/etc/hosts

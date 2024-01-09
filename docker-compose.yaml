@@ -1,0 +1,18 @@
+version: "3"
+
+services:
+  smartdns:
+    image: pymumu/smartdns:latest
+    container_name: smartdns
+    network_mode: host
+    restart: unless-stopped
+    volumes:
+      - ./smartdns:/etc/smartdns
+  dnsmasq:
+    image: programster/dnsmasq
+    container_name: dnsmasq
+    network_mode: host
+    restart: unless-stopped
+    volumes:
+      - ./dnsmasq:/etc/dnsmasq.d
+      - ./hosts:/etc/hosts

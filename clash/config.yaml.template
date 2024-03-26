@@ -1,0 +1,266 @@
+port: 7890
+socks-port: 7891
+redir-port: 7893
+tproxy-port: 7894
+allow-lan: true
+
+mode: Rule
+log-level: warning
+external-controller: "0.0.0.0:9090"
+external-ui: yacd
+secret: ""
+ipv6: true
+
+bind-address: "*"
+cfw-latency-url: "http://cp.cloudflare.com/generate_204"
+
+dns:
+  enable: true
+  ipv6: true
+  listen: ":5355"
+  enhanced-mode: fake-ip
+  default-nameserver:
+    - 223.5.5.5
+  fake-ip-filter:
+    - "*.lan"
+  nameserver:
+    - 223.5.5.5
+    - 119.29.29.29
+  fallback:
+    - 8.8.8.8
+    - 1.1.1.1
+    - tls://dns.google:853
+
+tun:
+  enable: true
+  stack: mixed
+  auto-route: true
+  gso: true
+  inet4-route-address:
+    - 198.18.0.0/15
+    - 8.8.8.8/32
+    - 1.1.1.1/32
+    - 91.108.4.0/32
+    - 91.108.8.0/22
+    - 91.108.12.0/22
+    - 91.108.16.0/22
+    - 91.108.20.0/22
+    - 91.108.56.0/22
+    - 91.108.192.0/22
+    - 149.154.160.0/20
+    - 185.76.151.0/24
+  inet6_route_address:
+    - fc00::/18
+    - 2001:b28:f23d::/48
+    - 2001:b28:f23f::/48
+    - 2001:67c:4e8::/48
+    - 2001:b28:f23c::/48
+    - 2a0a:f280::/32
+
+proxies:
+  - { "name": "Place Holder", "type": "none" }
+
+proxy-groups:
+  - name: "Proxy"
+    type: select
+    proxies:
+      - "Url-Test"
+      - "DIRECT"
+
+  - name: "Url-Test"
+    type: url-test
+    tolerance: 80
+    url: "http://captive.apple.com"
+    interval: 300
+
+  - name: "Apple"
+    type: select
+    proxies:
+      - "DIRECT"
+      - "Proxy"
+
+  - name: "Google"
+    type: select
+    proxies:
+      - "Proxy"
+
+  - name: "OpenAI"
+    type: select
+    proxies:
+      - "Proxy"
+
+  - name: "JPGame"
+    type: select
+    proxies:
+      - "Proxy"
+      - "DIRECT"
+
+  - name: "GloGame"
+    type: select
+    proxies:
+      - "Proxy"
+      - "DIRECT"
+
+  - name: "Bilibili"
+    type: select
+    proxies:
+      - "DIRECT"
+      - "Proxy"
+
+  - name: "Streaming"
+    type: select
+    proxies:
+      - "Proxy"
+
+  - name: "Telegram"
+    type: select
+    proxies:
+      - "Proxy"
+
+rule-providers:
+  reject:
+    type: http
+    behavior: domain
+    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/reject.txt"
+    path: ./ruleset/reject.yaml
+    interval: 86400
+
+  icloud:
+    type: http
+    behavior: domain
+    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/icloud.txt"
+    path: ./ruleset/icloud.yaml
+    interval: 86400
+
+  apple:
+    type: http
+    behavior: domain
+    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/apple.txt"
+    path: ./ruleset/apple.yaml
+    interval: 86400
+
+  google:
+    type: http
+    behavior: domain
+    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/google.txt"
+    path: ./ruleset/google.yaml
+    interval: 86400
+
+  direct:
+    type: http
+    behavior: domain
+    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/direct.txt"
+    path: ./ruleset/direct.yaml
+    interval: 86400
+
+  private:
+    type: http
+    behavior: domain
+    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/private.txt"
+    path: ./ruleset/private.yaml
+    interval: 86400
+
+  cncidr:
+    type: http
+    behavior: ipcidr
+    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/cncidr.txt"
+    path: ./ruleset/cncidr.yaml
+    interval: 86400
+
+  lancidr:
+    type: http
+    behavior: ipcidr
+    url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/lancidr.txt"
+    path: ./ruleset/lancidr.yaml
+    interval: 86400
+
+  Bilibili:
+    {
+      type: http,
+      behavior: classical,
+      path: ./Rules/Bilibili.yaml,
+      url: "https://cdn.jsdelivr.net/gh/DivineEngine/Profiles@master/Clash/RuleSet/StreamingMedia/Video/bilibili.yaml",
+      interval: 21600,
+    }
+  YouTube:
+    {
+      type: http,
+      behavior: classical,
+      path: ./Rules/YouTube.yaml,
+      url: "https://cdn.jsdelivr.net/gh/DivineEngine/Profiles@master/Clash/RuleSet/StreamingMedia/Video/YouTube.yaml",
+      interval: 21600,
+    }
+  Netflix:
+    {
+      type: http,
+      behavior: classical,
+      path: ./Rules/Netflix.yaml,
+      url: "https://cdn.jsdelivr.net/gh/DivineEngine/Profiles@master/Clash/RuleSet/StreamingMedia/Video/Netflix.yaml",
+      interval: 21600,
+    }
+  Telegram:
+    {
+      type: http,
+      behavior: classical,
+      path: ./Rules/Telegram.yaml,
+      url: "https://cdn.jsdelivr.net/gh/DivineEngine/Profiles@master/Clash/RuleSet/Extra/Telegram/Telegram.yaml",
+      interval: 21600,
+    }
+  Steam:
+    {
+      type: http,
+      behavior: classical,
+      path: ./Rules/Games/Steam.yaml,
+      url: "https://cdn.jsdelivr.net/gh/DivineEngine/Profiles@master/Clash/RuleSet/Extra/Game/Steam.yaml",
+      interval: 21600,
+    }
+  Streaming:
+    {
+      type: http,
+      behavior: classical,
+      path: ./Rules/Streaming.yaml,
+      url: "https://cdn.jsdelivr.net/gh/DivineEngine/Profiles@master/Clash/RuleSet/StreamingMedia/Streaming.yaml",
+      interval: 21600,
+    }
+
+rules:
+  # - AND,((NETWORK,UDP),(DST-PORT,443)),REJECT
+  - "DOMAIN,cdn.jsdelivr.net,Url-Test"
+  - RULE-SET,private,DIRECT
+  - RULE-SET,reject,REJECT
+
+  - DOMAIN-SUFFIX,openai.com,OpenAI
+  - DOMAIN-SUFFIX,hdfans.org,DIRECT
+  - DOMAIN-SUFFIX,1ptba.com,DIRECT
+
+  - DOMAIN-SUFFIX,google.com,Google
+  - DOMAIN-SUFFIX,google.com.hk,Google
+  - DOMAIN-SUFFIX,bing.com,Google
+
+  # Games
+  - RULE-SET,Steam,GloGame
+  - DOMAIN-SUFFIX,colorfulpalette.org,JPGame
+  - DOMAIN-SUFFIX,nikke-kr.com,GloGame
+  - DOMAIN,nikke.gcp.sched.qcloudcdn.com,GloGame
+
+  - RULE-SET,Telegram,Telegram
+  - RULE-SET,icloud,Apple
+  - RULE-SET,apple,Apple
+
+  - RULE-SET,Netflix,Streaming
+  - RULE-SET,YouTube,Streaming
+  - RULE-SET,Streaming,Streaming
+
+  - RULE-SET,Bilibili,Bilibili
+  - "DOMAIN-SUFFIX,biliapi.net,Bilibili"
+  - "DOMAIN-SUFFIX,bilibili.com,Bilibili"
+  - "DOMAIN-SUFFIX,bilivideo.com,Bilibili"
+  - "DOMAIN-SUFFIX,hdslb.com,Bilibili"
+
+  - RULE-SET,direct,DIRECT
+  # - RULE-SET,lancidr,DIRECT
+  # - RULE-SET,cncidr,DIRECT
+  # - GEOIP,LAN,DIRECT
+  # - GEOIP,CN,DIRECT
+  # - IP-CIDR,0.0.0.0/0,DIRECT,no-resolve
+  - MATCH,Proxy

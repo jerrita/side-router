@@ -17,3 +17,14 @@ services:
       - ./dnsmasq.conf:/etc/dnsmasq.conf
       - ./dnsmasq.d:/etc/dnsmasq.d
       - ./hosts:/etc/hosts
+  clash:
+    image: metacubex/mihomo
+    container_name: clash
+    network_mode: host
+    restart: unless-stopped
+    volumes:
+      - ./clash:/root/.config/mihomo
+    cap_add:
+      - NET_ADMIN
+    devices:
+      - /dev/net/tun

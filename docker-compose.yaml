@@ -28,3 +28,9 @@ services:
       - NET_ADMIN
     devices:
       - /dev/net/tun
+  vlmcsd:
+    image: mogeko/vlmcsd
+    container_name: vlmcsd
+    network_mode: host
+    restart: unless-stopped
+
